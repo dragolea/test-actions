@@ -16,14 +16,19 @@ jobs:
       matrix:
         version: [20, 18]
         platform: [macos-latest, ubuntu-latest, windows-latest]
+
     runs-on: ${{ matrix.platform }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Instal SAP CDS-DK
         run: npm i -g @sap/cds-dk ts-node
-      - run: npm ci
+
       - name: Start unit / integration tests
         run: npm test
 
@@ -35,6 +40,7 @@ jobs:
       matrix:
         version: [20, 18]
         platform: [macos-latest, ubuntu-latest, windows-latest]
+
     runs-on: ${{ matrix.platform }}
 
     steps:
