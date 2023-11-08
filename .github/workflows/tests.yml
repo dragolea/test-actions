@@ -21,24 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Cache dependencies
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-          path: ~/.npm
-
       - name: Instal SAP CDS-DK
         run: npm i -g @sap/cds-dk ts-node
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-
       - run: npm ci
-      - run: npm test
+      - name: Start unit / integration tests
+        run: npm test
 
   # This will start the e2e tests with a live server
   test-e2e:
@@ -53,14 +40,6 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-
-      # Use cached dependencies
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-          path: ~/.npm
 
       - name: Install dependencies
         run: npm ci
