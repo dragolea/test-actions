@@ -14,7 +14,7 @@ jobs:
     name: Unit
     strategy:
       matrix:
-        version: [20]
+        version: [20, 18]
         platform: [macos-latest, ubuntu-latest]
 
     runs-on: ${{ matrix.platform }}
@@ -38,7 +38,7 @@ jobs:
     needs: test-unit
     strategy:
       matrix:
-        version: [20]
+        version: [20, 18]
         platform: [macos-latest, ubuntu-latest]
 
     runs-on: ${{ matrix.platform }}
