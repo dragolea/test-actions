@@ -6,11 +6,18 @@ on:
       - 'test/**'
       - 'README.md'
 
+  workflow_dispatch:
+
 jobs:
   # This will start unit/integration testing
   test-unit:
     name: 'Testing: Unit'
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [20, 18]
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.platform }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -33,7 +40,12 @@ jobs:
   test-e2e:
     name: 'Testing: End-to-end (e2e)'
     needs: test-unit
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [20, 18]
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.platform }}
+    
     steps:
       - name: Get code
         uses: actions/checkout@v3
