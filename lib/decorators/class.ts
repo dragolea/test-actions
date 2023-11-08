@@ -41,7 +41,7 @@ function ServiceLogic<Target extends new (...args: never) => unknown>() {
 }
 
 /**
- * This decorator can be applied to classes containing Unbound actions.
+ * This decorator can be applied to classes  Unbound actions.
  */
 
 function UnboundActions<Target extends new (...args: never) => unknown>() {
