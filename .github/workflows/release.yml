@@ -3,40 +3,38 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: 'Bump type:  patch (0.0.x), minor (0.x.0), major (x.0.0)'
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-
-        default: patch
+  pull_request:
+    types:
+      - closed
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
-  # This will increase package.json version based on the inputs from workflow_dispatch
-  bump-version:
-    name: 'Bump: version increase'
-    if:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    steps:
+      - run: |
+          echo The PR was merged
 
+    # This will create automatic tags based on the last 50 comits and it will create latest release
+  release:
+    name: 'Create: tags and release'
+    runs-on: ubuntu-latest
+    needs: if_merged
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
 
       - name: 'Save version to .env'
         env:
-          IS_MINOR_FOUND: ${{ contains(github.event.inputs.bump, 'minor') }}
-          IS_PATCH_FOUND: ${{ contains(github.event.inputs.bump, 'patch') }}
-          IS_MAJOR_FOUND: ${{ contains(github.event.inputs.bump, 'major') }}
+          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:minor') }}
+          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:patch') }}
+          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:major') }}
         run: |
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
@@ -49,30 +47,9 @@ jobs:
             echo "Version: major"
           fi
 
-      - name: 'Automated: version bump (package.json)'
-        id: version-bump
-        uses: phips28/gh-action-bump-version@v10.1.1
-        with:
-          version-type: ${{ env.version }}
-          minor-wording: minor
-          major-wording: major
-          patch-wording: patch
-          target-branch: main
-          skip-tag: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # This will create automatic tags based on the last 50 comits and it will create latest release
-  release:
-    name: 'Create: tags and release'
-    needs: bump-version
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
       - uses: rymndhng/release-on-push-action@master
         with:
-          bump_version_scheme: patch
+          bump_version_scheme: ${{ env.version }}
           release_name: 'Release <RELEASE_VERSION>'
           tag_prefix: 'v'
 

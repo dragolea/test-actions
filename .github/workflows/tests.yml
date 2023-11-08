@@ -1,10 +1,9 @@
-name: 'Tests : unit / integration / e2e'
+name: Test
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
     paths-ignore:
-      - 'test/**'
       - 'README.md'
 
   workflow_dispatch:
@@ -12,7 +11,7 @@ on:
 jobs:
   # This will start unit/integration testing
   test-unit:
-    name: 'Testing: Unit'
+    name: Unit
     strategy:
       matrix:
         version: [20, 18]
@@ -39,7 +38,7 @@ jobs:
 
   # This will start the e2e tests with a live server
   test-e2e:
-    name: 'Testing: End-to-end (e2e)'
+    name: End-to-end (e2e)
     needs: test-unit
     strategy:
       matrix:
