@@ -1,4 +1,5 @@
 name: 'Tests : unit / integration / e2e'
+
 on:
   pull_request:
     types: [opened, edited, synchronize]
@@ -15,7 +16,7 @@ jobs:
     strategy:
       matrix:
         version: [20, 18]
-        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -43,9 +44,9 @@ jobs:
     strategy:
       matrix:
         version: [20, 18]
-        platform: [ macos-latest, ubuntu-latest, windows-latest ]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
-    
+
     steps:
       - name: Get code
         uses: actions/checkout@v3

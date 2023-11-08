@@ -1,0 +1,16 @@
+name: 'Enforce labels release:patch, release:minor, release:major, norelease'
+
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, edited, synchronize]
+
+jobs:
+  # This will enfoce pull request to have a label 'release:patch', 'release:minor', 'release:major'
+  enforce-label-version-release:
+    name: 'Pull request mandatory labels: release:patch, release:minor, release:major'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: yogevbd/enforce-label-action@2.1.0
+        with:
+          REQUIRED_LABELS_ANY: 'release:patch,release:minor,release:major'
+          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release:patch', 'release:minor', 'release:major']"
