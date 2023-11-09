@@ -2,7 +2,7 @@ name: Labels
 
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, edited, synchronize]
+    types: [opened, labeled]
 
 permissions:
   contents: write
