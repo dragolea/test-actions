@@ -32,9 +32,9 @@ jobs:
 
       - name: 'Save version to .env'
         env:
-          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:minor') }}
-          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:patch') }}
-          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release:major') }}
+          IS_MINOR_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'minor') }}
+          IS_PATCH_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'patch')}}
+          IS_MAJOR_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'major')}}
         run: |
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
