@@ -1,3 +1,5 @@
+# This will run unit / integration and e2e tests
+
 name: Test
 
 on:

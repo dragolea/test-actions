@@ -1,3 +1,5 @@
+# This will enforce user to have release labels
+
 name: Labels
 
 on:
