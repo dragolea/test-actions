@@ -31,7 +31,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
       - name: 'Save version to .env'
-        env: 
+        env:
           IS_MINOR_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'minor') }}
           IS_PATCH_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'patch')}}
           IS_MAJOR_FOUND: ${{ startsWith(github.event.pull_request.labels.*.name, 'release') && contains(github.event.pull_request.labels.*.name, 'major')}}
