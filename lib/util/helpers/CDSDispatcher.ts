@@ -82,7 +82,7 @@ class CDSDispatcher {
         const _isDeleted = (data: unknown): boolean => data === 1;
         const deleted = _isDeleted(results);
 
-        // DELETE single request
+        // DELETE single
         return await callback.call(entity, deleted, req, isSingleInstance);
       }
 
