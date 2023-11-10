@@ -17,7 +17,7 @@ import { SRV } from '../constants/Constants';
 import cds, { type Request, type Service, type ServiceImpl } from '@sap/cds';
 
 /**
- * Use this class to manage the registration of the event handlers for the entities.
+ * Use this class to manage the registration of the event handlers for the .
  */
 
 class CDSDispatcher {
