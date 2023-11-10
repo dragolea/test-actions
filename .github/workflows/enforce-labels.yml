@@ -25,7 +25,9 @@ jobs:
   bump-version:
     needs: enforce-label-version-release
     name: 'Bump: version increase'
-    if:
+    if: |
+      ${{ (startsWith(github.event.pull_request.labels.*.name, 'release')) && (contains(github.event.pull_request.labels.*.name, 'minor')) || (contains(github.event.pull_request.labels.*.name, 'patch')) || (contains(github.event.pull_request.labels.*.name, 'major')) }}
+
     runs-on: ubuntu-latest
     permissions:
       contents: write
