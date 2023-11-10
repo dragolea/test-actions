@@ -9,9 +9,9 @@ permissions:
   pull-requests: read
 
 jobs:
-  # This will enforce pull request to have a label 'version:+ major', 'version:+ minor', 'version:+ major'
+  # This will enforce pull request to have a label 'release.major', 'release.minor', 'release.major'
   enforce-label-version-release:
-    name: 'Enforce Labels: version:+ major, version:+ minor, version:+ major'
+    name: 'Enforce Labels: release.major, release.minor, release.major'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -20,8 +20,8 @@ jobs:
       - name: Enforce version release labels
         uses: yogevbd/enforce-label-action@2.1.0
         with:
-          REQUIRED_LABELS_ANY: 'version:+ major,version:+ minor,version:+ major'
-          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['version:+ major', 'version:+ minor', 'version:+ major']"
+          REQUIRED_LABELS_ANY: 'release.major,release.minor,release.major'
+          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release.major', 'release.minor', 'release.major']"
 
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
@@ -36,9 +36,9 @@ jobs:
 
       - name: 'Save version to .env'
         env:
-          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'version:+ minor') }}
-          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'version:+ patch') }}
-          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'version:+ major') }}
+          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release.minor') }}
+          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release.patch') }}
+          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'release.major') }}
         run: |
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
