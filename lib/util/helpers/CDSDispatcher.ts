@@ -26,7 +26,7 @@ class CDSDispatcher {
 
   /**
    * Creates an instance of CDSDispatcher.
-   * @param {Constructable[]} entities - An array of  classes to manage event handlers for.
+   * @param {Constructable[]} entities - An  of  classes to manage event handlers for.
    */
   constructor(private readonly entities: Constructable[]) {
     if (Util.isEmptyArray(entities)) {
