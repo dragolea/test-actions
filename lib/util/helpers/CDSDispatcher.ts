@@ -30,7 +30,7 @@ class CDSDispatcher {
    */
   constructor(private readonly entities: Constructable[]) {
     if (Util.isEmptyArray(entities)) {
-      throw new Error('The new CDSDispatcher constructor cannot be empty!');
+      throw new Error('The new CDSDispatcher constructor  be empty!');
     }
 
     this.initializeContainer();
