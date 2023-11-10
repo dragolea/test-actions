@@ -22,40 +22,109 @@ jobs:
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
 
   # This will use the enforced label from previous step to create increase the package.json version
-  bump-version:
+
+  bump-version-minor:
+    name: 'Bump: version increase: minor'
+    if: contains(github.event.pull_request.labels.*.name, 'minor')
     needs: enforce-label-version-release
-    name: 'Bump: version increase'
-    if:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-      - name: 'Save version to .env'
-        env:
-          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
-          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
-          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
-        run: |
-          if [ "${IS_MINOR_FOUND}" == "true" ]; then
-            echo "version=minor" >> $GITHUB_ENV
-            echo "Version: minor"
-          elif [ "${IS_PATCH_FOUND}" == "true" ]; then
-            echo "version=patch" >> $GITHUB_ENV
-            echo "Version: patch"
-          else
-            echo "version=major" >> $GITHUB_ENV
-            echo "Version: major"
-          fi
+
       - name: 'Automated: version bump (package.json)'
         id: version-bump
         uses: phips28/gh-action-bump-version@v10.1.1
         with:
-          version-type: ${{ env.version }}
+          version-type: minor
           minor-wording: minor
           major-wording: major
           patch-wording: patch
           skip-tag: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bump-version-patch:
+    name: 'Bump: version increase: patch'
+    if: contains(github.event.pull_request.labels.*.name, 'patch')
+    needs: enforce-label-version-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: 'Automated: version bump (package.json)'
+        id: version-bump
+        uses: phips28/gh-action-bump-version@v10.1.1
+        with:
+          version-type: patch
+          minor-wording: minor
+          major-wording: major
+          patch-wording: patch
+          skip-tag: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bump-version-major:
+    name: 'Bump: version increase: major'
+    if: contains(github.event.pull_request.labels.*.name, 'major')
+    needs: enforce-label-version-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: 'Automated: version bump (package.json)'
+        id: version-bump
+        uses: phips28/gh-action-bump-version@v10.1.1
+        with:
+          version-type: major
+          minor-wording: minor
+          major-wording: major
+          patch-wording: patch
+          skip-tag: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # bump-version:
+  #   needs: enforce-label-version-release
+  #   name: 'Bump: version increase'
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - name: Checkout source code
+  #       uses: actions/checkout@v2
+  #     - name: 'Save version to .env'
+  #       env:
+  #         IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
+  #         IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
+  #         IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
+  #       run: |
+  #         if [ "${IS_MINOR_FOUND}" == "true" ]; then
+  #           echo "version=minor" >> $GITHUB_ENV
+  #           echo "Version: minor"
+  #         elif [ "${IS_PATCH_FOUND}" == "true" ]; then
+  #           echo "version=patch" >> $GITHUB_ENV
+  #           echo "Version: patch"
+  #         else
+  #           echo "version=major" >> $GITHUB_ENV
+  #           echo "Version: major"
+  #         fi
+  #     - name: 'Automated: version bump (package.json)'
+  #       id: version-bump
+  #       uses: phips28/gh-action-bump-version@v10.1.1
+  #       with:
+  #         version-type: ${{ env.version }}
+  #         minor-wording: minor
+  #         major-wording: major
+  #         patch-wording: patch
+  #         skip-tag: true
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
