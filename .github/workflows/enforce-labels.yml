@@ -43,7 +43,12 @@ jobs:
           IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
           IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
           IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
+
         run: |
+          echo "IS_MINOR_FOUND: $IS_MINOR_FOUND"
+          echo "IS_PATCH_FOUND: $IS_PATCH_FOUND"
+          echo "IS_MAJOR_FOUND: $IS_MAJOR_FOUND"
+
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
             echo "Version: minor"

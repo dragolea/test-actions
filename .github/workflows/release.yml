@@ -8,6 +8,8 @@ on:
       - closed
     paths-ignore:
       - '../../test'
+      - '../ISSUE_TEMPLATE'
+      - '../workflows'
 
 permissions:
   contents: write

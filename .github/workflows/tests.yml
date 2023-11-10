@@ -7,6 +7,8 @@ on:
     types: [opened, edited, synchronize]
     paths-ignore:
       - '../../README.md'
+      - '../ISSUE_TEMPLATE'
+      - '../workflows'
 
   workflow_dispatch:
 
