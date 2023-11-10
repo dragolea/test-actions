@@ -25,27 +25,10 @@ jobs:
           REQUIRED_LABELS_ANY: 'release: patch,release: minor,release: major'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
 
-  check-version-bump-labels:
-    name: Check version bump labels
-    needs: enforce-labels
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Check for version bump labels
-        run: |
-          if [[ -n "$(grep -E 'minor|patch|major' <<< "${{ github.event.pull_request.labels.*.name }}")" ]]; then
-            echo "Version bump labels selected, version update can proceed."
-          else
-            echo "No version bump labels found. Exiting workflow."
-            exit 78
-          fi
-
   # This will use the enforced label from previous step to create increase the package.json version
   bump-version:
     name: 'Bump: version increase'
-    needs: check-version-bump-labels
+    needs: enforce-labels
     runs-on: ubuntu-latest
 
     permissions:
