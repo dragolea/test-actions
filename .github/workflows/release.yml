@@ -36,8 +36,8 @@ jobs:
 
       - name: 'Save version to .env'
         env:
-          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
           IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
+          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
           IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
         run: |
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
