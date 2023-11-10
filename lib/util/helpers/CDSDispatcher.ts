@@ -78,7 +78,7 @@ class CDSDispatcher {
 
     if (!Array.isArray(results)) {
       if (Util.isNumber(results)) {
-        // private routine for this func
+        // private routine for this
         const _isDeleted = (data: unknown): boolean => data === 1;
         const deleted = _isDeleted(results);
 
