@@ -1,4 +1,4 @@
-name: Version Bump
+name: Version bump
 
 on:
   pull_request:
@@ -9,8 +9,9 @@ permissions:
   pull-requests: read
 
 jobs:
+  # This will enforce pull request to have a label 'major', 'minor', 'major'
   enforce-label-version-release:
-    name: 'Enforce Labels: release: patch, release: minor, release: major'
+    name: 'Enforce Labels: major, minor, major'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -19,12 +20,13 @@ jobs:
       - name: Enforce version release labels
         uses: yogevbd/enforce-label-action@2.1.0
         with:
-          REQUIRED_LABELS_ANY: 'release: patch,release: minor,release: major'
-          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
+          REQUIRED_LABELS_ANY: 'major,minor,major'
+          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['major', 'minor', 'major']"
 
+  # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
     needs: enforce-label-version-release
-    name: 'Bump: Version Increase'
+    name: 'Bump: version increase'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,15 +35,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 'Save version to .env'
+        env:
+          IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
+          IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
+          IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
         run: |
-          IS_MINOR_FOUND=$(echo "${{ github.event.pull_request.labels.*.name }}" | grep -c 'release: minor')
-          IS_PATCH_FOUND=$(echo "${{ github.event.pull_request.labels.*.name }}" | grep -c 'release: patch')
-          IS_MAJOR_FOUND=$(echo "${{ github.event.pull_request.labels.*.name }}" | grep -c 'release: major')
-
-          if [ "${IS_MINOR_FOUND}" -gt 0 ]; then
+          if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
             echo "Version: minor"
-          elif [ "${IS_PATCH_FOUND}" -gt 0 ]; then
+          elif [ "${IS_PATCH_FOUND}" == "true" ]; then
             echo "version=patch" >> $GITHUB_ENV
             echo "Version: patch"
           else
@@ -49,7 +51,7 @@ jobs:
             echo "Version: major"
           fi
 
-      - name: 'Automated: Version Bump (package.json)'
+      - name: 'Automated: version bump (package.json)'
         id: version-bump
         uses: phips28/gh-action-bump-version@v10.1.1
         with:
