@@ -21,19 +21,28 @@ jobs:
           REQUIRED_LABELS_ANY: 'release: patch,release: minor,release: major'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
 
-  # This will use the enforced label from previous step to create increase the package.json version
-  bump-version:
-    needs: enforce-label-version-release
-    name: 'Bump: version increase'
-    if: |
-      ${{ (startsWith(github.event.pull_request.labels.*.name, 'release')) && (contains(github.event.pull_request.labels.*.name, 'minor')) || (contains(github.event.pull_request.labels.*.name, 'patch')) || (contains(github.event.pull_request.labels.*.name, 'major')) }}
+  if_version_bump_labels:
+    if: ${{ ((startsWith(github.event.pull_request.labels.*.name, 'release')) && (contains(github.event.pull_request.labels.*.name, 'minor')) || contains(github.event.pull_request.labels.*.name, 'patch') || contains(github.event.pull_request.labels.*.name, 'major')) }}
 
     runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          echo Version bump labels selected, version started ...
+
+  # This will use the enforced label from previous step to create increase the package.json version
+  bump-version:
+    needs: [enforce-label-version-release, if_version_bump_labels]
+    name: 'Bump: version increase'
+    runs-on: ubuntu-latest
+
     permissions:
       contents: write
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
+
       - name: 'Save version to .env'
         env:
           IS_MINOR_FOUND: ${{ (startsWith(github.event.pull_request.labels.*.name, 'release')) && (contains(github.event.pull_request.labels.*.name, 'minor')) }}
