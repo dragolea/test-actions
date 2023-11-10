@@ -20,8 +20,8 @@ jobs:
       - name: Enforce version release labels
         uses: yogevbd/enforce-label-action@2.1.0
         with:
-          REQUIRED_LABELS_ANY: 'release: patch,release: minor,release: major'
-          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
+          REQUIRED_LABELS_ANY: 'release:patch,release:minor,release:major'
+          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release:patch', 'release:minor', 'release:major']"
 
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
