@@ -22,6 +22,7 @@ jobs:
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
 
   if_version_bump_labels:
+    needs: enforce-label-version-release
     if: ${{ contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch') || contains(github.event.pull_request.labels.*.name, 'major') }}
     runs-on: ubuntu-latest
     steps:
