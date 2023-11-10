@@ -1,6 +1,6 @@
 # This will enforce user to have release labels
 
-name: Labels
+name: Version bump
 
 on:
   pull_request:
@@ -12,27 +12,40 @@ permissions:
 
 jobs:
   # This will enfoce pull request to have a label 'release: patch', 'release: minor', 'release: major'
-  enforce-label-version-release:
-    name: 'Mandatory label: release: patch, release: minor, release: major'
+  enforce-labels:
+    name: 'Enforce Labels: release: patch, release: minor, release: major'
     runs-on: ubuntu-latest
     steps:
-      - uses: yogevbd/enforce-label-action@2.1.0
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Enforce version release labels
+        uses: yogevbd/enforce-label-action@2.1.0
         with:
           REQUIRED_LABELS_ANY: 'release: patch,release: minor,release: major'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['release: patch', 'release: minor', 'release: major']"
 
-  if_version_bump_labels:
-    needs: enforce-label-version-release
-    if: contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch') || contains(github.event.pull_request.labels.*.name, 'major')
+  check-version-bump-labels:
+    name: Check version bump labels
+    needs: enforce-labels
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo Version bump labels selected, version started ...
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Check for version bump labels
+        run: |
+          if [[ -n "$(grep -E 'minor|patch|major' <<< "${{ github.event.pull_request.labels.*.name }}")" ]]; then
+            echo "Version bump labels selected, version update can proceed."
+          else
+            echo "No version bump labels found. Exiting workflow."
+            exit 78
+          fi
 
   # This will use the enforced label from previous step to create increase the package.json version
   bump-version:
-    needs: [enforce-label-version-release, if_version_bump_labels]
     name: 'Bump: version increase'
+    needs: check-version-bump-labels
     runs-on: ubuntu-latest
 
     permissions:
@@ -58,6 +71,7 @@ jobs:
             echo "version=major" >> $GITHUB_ENV
             echo "Version: major"
           fi
+
       - name: 'Automated: version bump (package.json)'
         id: version-bump
         uses: phips28/gh-action-bump-version@v10.1.1
