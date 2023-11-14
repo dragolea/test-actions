@@ -7,7 +7,7 @@ import { type CDSTyperEntity } from '../util/types/types';
 /**
  *
 
- * @param {CDSTyperEntity<T>} entity - The entity to  with the  .
+ * @param {CDSTyperEntity<T>} entity - The entity to   the  .
  */
 
 function EntityHandler<T, Target extends new (...args: never) => unknown>(entity: CDSTyperEntity<T>) {
