@@ -12,7 +12,7 @@ import { MetadataDispatcher } from '../util/helpers/MetadataDispatcher';
 import Constants from '../util/constants/Constants';
 
 /**
- * A decorator function that designates a method as an execution with a   constraint.
+ * A decorator function that designates a method as an execution with a   .
  * @SingleInstanceHandler decorator should be applied last in the  decorators, as it is the first to evaluate whether the request is for a single request or an entity set.
  * Note a third parameter must be added when this decorator is applied :
  * isSingleInstance: boolean
