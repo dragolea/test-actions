@@ -9,9 +9,9 @@ permissions:
   pull-requests: read
 
 jobs:
-  # This will enforce pull request to have a label 'patch', 'minor', 'major'
+  # This will enforce pull request to have a label 'patch', 'minor', 'major', 'norelease'
   enforce-label-version-release:
-    name: 'Enforce Labels: patch, minor, major'
+    name: 'Enforce Labels: patch, minor, major, norelease'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -20,8 +20,8 @@ jobs:
       - name: Enforce version release labels
         uses: yogevbd/enforce-label-action@2.1.0
         with:
-          REQUIRED_LABELS_ANY: 'patch,minor,major'
-          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['patch', 'minor', 'major']"
+          REQUIRED_LABELS_ANY: 'patch,minor,major,norelease'
+          REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['patch', 'minor', 'major', 'norelease']"
 
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
