@@ -22,7 +22,7 @@ export class MetadataDispatcher<T extends Object> {
     return this.hasMetadataSet() ? Reflect.getMetadata(this.metadataKey, this.target) : [];
   }
 
-  // PUBLIC STATIC METHODS
+  // PUBLIC  METHODS
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static getEntity(entity: Constructable): { drafts: any } {
     return Reflect.getMetadata(Constants.DECORATOR.ENTITY_HANDLER_NAME, entity.constructor);
