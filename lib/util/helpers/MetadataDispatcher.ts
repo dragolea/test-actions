@@ -12,7 +12,7 @@ export class MetadataDispatcher<T extends Object> {
     this.metadataKey = metadataKey;
   }
 
-  // PRIVATE ROUTINES
+  // PRIVATE
 
   private hasMetadataSet(): boolean {
     return Reflect.hasMetadata(this.metadataKey, this.target);
