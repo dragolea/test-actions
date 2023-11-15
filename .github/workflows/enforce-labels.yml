@@ -22,16 +22,22 @@ jobs:
         with:
           REQUIRED_LABELS_ANY: 'patch,minor,major,norelease'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['patch', 'minor', 'major', 'norelease']"
+  
+  if_no_release:
+    if: github.event.pull_request.labels.*.name != 'norelease' 
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo The PR has 'norelease' label
+
 
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
-    needs: enforce-label-version-release
+    needs: [enforce-label-version-release, if_no_release]
     name: 'Bump: version increase'
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
-    if: github.event.pull_request.labels.*.name != 'norelease' 
 
     steps:
       - name: Checkout source code
@@ -42,7 +48,6 @@ jobs:
           IS_PATCH_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
           IS_MINOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
           IS_MAJOR_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
-          IS_NO_RELEASE_FOUND: ${{ contains(github.event.pull_request.labels.*.name, 'norelease') }}
         run: |
           if [ "${IS_MINOR_FOUND}" == "true" ]; then
             echo "version=minor" >> $GITHUB_ENV
