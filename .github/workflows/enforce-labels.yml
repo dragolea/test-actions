@@ -30,6 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    
+    if: github.event.pull_request.labels.*.name != 'norelease' 
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
