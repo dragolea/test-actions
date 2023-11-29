@@ -8,7 +8,7 @@ export const Constants = {
 };
 
 /**
- * Use SRV to inject the CDS Service into your class as a dependency.
+ * Use SRV to inject the  Service into your class as a dependency.
  */
 export const SRV = 'srv';
 
