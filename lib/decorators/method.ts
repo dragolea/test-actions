@@ -28,7 +28,7 @@ function SingleInstanceCapable<Target extends Object>() {
 }
 
 /**
- * Builds a decorator for handling the .after method.
+ * Builds a decorator for handling the .after .
  *
  * @param {Event} event - The event to handle.
  * @param {HandlerType} handlerType - The type of handler (, After, On).
