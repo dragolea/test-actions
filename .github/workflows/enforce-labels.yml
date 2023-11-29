@@ -23,8 +23,8 @@ jobs:
           REQUIRED_LABELS_ANY: 'patch,minor,major,norelease'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['patch', 'minor', 'major', 'norelease']"
   
-  if_no_release:
-    if: github.event.pull_request.labels.*.name != 'norelease' 
+  if_norelease_label_then_stop:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'norelease') }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -33,7 +33,7 @@ jobs:
 
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
-    needs: [enforce-label-version-release, if_no_release]
+    needs: if_norelease_label_then_stop
     name: 'Bump: version increase'
     runs-on: ubuntu-latest
     permissions:
