@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   if_merged:
+    name: Merge to main branch 
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +25,7 @@ jobs:
           echo The PR was merged
   
   if_norelease_label_then_stop:
+    name: No release if label 'norelease' 
     needs: if_merged
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'norelease') }}
     runs-on: ubuntu-latest

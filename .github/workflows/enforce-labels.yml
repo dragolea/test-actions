@@ -23,17 +23,17 @@ jobs:
           REQUIRED_LABELS_ANY: 'patch,minor,major,norelease'
           REQUIRED_LABELS_ANY_DESCRIPTION: "Select at least one label ['patch', 'minor', 'major', 'norelease']"
   
-  if_norelease_label_then_stop:
+  if-label-norelease-stop:
+    name: No bump version if label 'norelease' 
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'norelease') }}
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo The PR has 'norelease' label
 
-
   # This will use the enforced label from the previous step to increase the package.json version
   bump-version:
-    needs: if_norelease_label_then_stop
+    needs: [if-label-norelease-stop, enforce-label-version-release]
     name: 'Bump: version increase'
     runs-on: ubuntu-latest
     permissions:
